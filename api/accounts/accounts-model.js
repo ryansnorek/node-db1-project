@@ -3,6 +3,8 @@ const db = require("../../data/db-config");
 const getAll = async () => {
   // SELECT * FROM accounts;
   const accounts = await db("accounts").select("*");
+  console.log(accounts)
+  console.log("dasbdkasjbdkasjd")
   return accounts;
 }
 

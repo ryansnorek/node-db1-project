@@ -1,27 +1,52 @@
-const router = require('express').Router()
+const router = require('express').Router();
+const { checkAccountPayload, checkAccountNameUnique, checkAccountId } = require("./accounts-middleware");
+const Accounts = require("./accounts-model");
 
 router.get('/', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+    throw new Error('brokennnn')
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.get('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+
+  } catch (e) {
+    next(e)
+  }
 });
 
 router.delete('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  try {
+
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.use((err, req, res, next) => { // eslint-disable-line
-  // DO YOUR MAGIC
+  res.status(err.status || 500).json({
+    message: err.message,
+    stack: err.stack
+});
 })
 
 module.exports = router;
