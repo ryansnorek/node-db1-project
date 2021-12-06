@@ -9,8 +9,13 @@ router.get('/', async (req, res, next) => {
   } catch (e) { next(e) }
 })
 
-router.get('/:id', checkAccountId, (req, res) => {
-  res.json(req.account);
+router.get('/:id', checkAccountId, async (req, res, next) => {
+  try {
+    const account = await Accounts.getById(req.params.id);
+    res.json(account);
+  } catch (e) {
+    next(e)
+  }
 })
 
 router.post(
@@ -19,7 +24,10 @@ router.post(
   checkAccountNameUnique, 
   async (req, res, next) => {
   try {
-    const newAccount = await Accounts.create(req.body);
+    const newAccount = await Accounts.create({ 
+      name: req.body.name.trim(),
+       budget: req.body.budget
+    });
     res.status(201).json(newAccount);
   } catch (e) {
     next(e)
@@ -53,8 +61,7 @@ router.delete(
 
 router.use((err, req, res, next) => { // eslint-disable-line
   res.status(err.status || 500).json({
-    message: err.message,
-    stack: err.stack
+    message: err.message
 });
 })
 

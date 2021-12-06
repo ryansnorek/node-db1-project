@@ -4,30 +4,24 @@ const db = require("../../data/db-config");
 
 exports.checkAccountPayload = (req, res, next) => {
   const { name, budget } = req.body;
-  switch(true) {
-    case (name === undefined || budget === undefined):
-      return (
-        next({ status: 400, message: "name and budget are required" })
-      );
-    case (typeof name !== "string"):
-      return (
-        next({ status: 400, message: "name of account must be a string" })
-      );
-    case (name.trim().length < 3 || name.trim().length > 100):
-      return (
-        next({ status: 400, message: "name of account must be between 3 and 100" })
-      );
-    case (typeof budget !== "number" || isNaN(budget)):
-      return (
-        next({ status: 400, message: "budget of account must be a number" })
-      );
-    case (budget < 0 || budget > 1000000):
-      return (
-        next({ status: 400, message: "budget of account is too large or too small" })
-      );
-    default:
-      return next();
+  const error = { status: 400 };
+  if (name === undefined || budget === undefined) {
+    error.message = "name and budget are required";
+  } else if (typeof name !== "string") {
+    error.message = "name of account must be a string";
+  } else if (name.trim().length < 3 || name.trim().length > 100) {
+    error.message = "name of account must be between 3 and 100";
+  } else if (typeof budget !== "number" || isNaN(budget)) {
+    error.message = "budget of account must be a number";
+  } else if (budget < 0 || budget > 1000000) {
+    error.message = "budget of account is too large or too small";
   }
+  if (error.message) {
+    next(error);
+  } else {
+    next();
+  }
+  
 }
 
 exports.checkAccountNameUnique = async (req, res, next) => {
@@ -47,9 +41,10 @@ exports.checkAccountId = async (req, res, next) => {
   try {
     const account = await Accounts.getById(req.params.id);
     if (!account) {
-      next({ status: 404, message:"not found" })
+      next({ status: 404, message: "account not found" })
     } else {
       req.account = account;
+      next()
     }
   } catch (e) { next(e) }
 }
