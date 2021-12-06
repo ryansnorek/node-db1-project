@@ -1,21 +1,35 @@
-const getAll = () => {
-  // DO YOUR MAGIC
+const db = require("../../data/db-config");
+
+const getAll = async () => {
+  // SELECT * FROM accounts;
+  const accounts = await db("accounts")
+    .select("*");
+  return accounts;
 }
 
-const getById = id => {
-  // DO YOUR MAGIC
+const getById = async id => {
+  // SELECT * FROM accounts WHERE id = id;
+  const account = await db("accounts")
+    .select("*")
+    .where("id", "=", id);
+  return account;
 }
 
-const create = account => {
-  // DO YOUR MAGIC
+const create = async newAccount => {
+  // INSERT INTO accounts (name, budget) VALUES ('name', ####);
+  const [accountID] = await db("accounts")
+    .insert(newAccount);
+  const createdAccount = await getById(accountID);
+  return createdAccount;
 }
 
 const updateById = (id, account) => {
-  // DO YOUR MAGIC
+  
 }
 
 const deleteById = id => {
   // DO YOUR MAGIC
+  console.log("connected")
 }
 
 module.exports = {
