@@ -2,31 +2,38 @@ const router = require('express').Router();
 const { checkAccountPayload, checkAccountNameUnique, checkAccountId } = require("./accounts-middleware");
 const Accounts = require("./accounts-model");
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-    throw new Error('brokennnn')
+    const accounts = await Accounts.getAll();
+    res.json(accounts);
+  } catch (e) { next(e) }
+})
+
+router.get('/:id', checkAccountId, async (req, res, next) => {
+  try {
+    const account = await Accounts.getById(req.params.id);
+    res.json(account);
+  } catch (e) { next(e) }
+})
+
+router.post(
+  '/', 
+  checkAccountPayload, 
+  checkAccountNameUnique, 
+  (req, res, next) => {
+  try {
+
   } catch (e) {
     next(e)
   }
 })
 
-router.get('/:id', (req, res, next) => {
-  try {
-
-  } catch (e) {
-    next(e)
-  }
-})
-
-router.post('/', (req, res, next) => {
-  try {
-
-  } catch (e) {
-    next(e)
-  }
-})
-
-router.put('/:id', (req, res, next) => {
+router.put(
+  '/:id', 
+  checkAccountId,
+  checkAccountPayload,
+  checkAccountNameUnique,
+  (req, res, next) => {
   try {
 
   } catch (e) {
@@ -34,7 +41,7 @@ router.put('/:id', (req, res, next) => {
   }
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', checkAccountId, (req, res, next) => {
   try {
 
   } catch (e) {

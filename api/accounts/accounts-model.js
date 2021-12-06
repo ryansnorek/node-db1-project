@@ -1,25 +1,17 @@
 const db = require("../../data/db-config");
 
-const getAll = async () => {
-  // SELECT * FROM accounts;
-  const accounts = await db("accounts").select("*");
-  console.log(accounts)
-  console.log("dasbdkasjbdkasjd")
-  return accounts;
-}
+// SELECT * FROM accounts;
+const getAll = () => db("accounts");
 
-const getById = async id => {
-  // SELECT * FROM accounts WHERE id = id;
-  const account = await db("accounts").select("*").where("id", "=", id);
-  return account;
-}
+// SELECT * FROM accounts WHERE id = id;
+const getById = id => db("accounts").where("id", id).first();
 
 const create = async newAccount => {
   // INSERT INTO accounts (name, budget) VALUES ('name', ####);
   const [accountID] = await db("accounts").insert(newAccount);
   const createdAccount = await getById(accountID);
   return createdAccount;
-}
+} 
 
 const updateById = async (id, account) => {
   // UPDATE accounts SET name = 'updated account' WHERE id = id;
