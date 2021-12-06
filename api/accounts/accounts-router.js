@@ -9,20 +9,18 @@ router.get('/', async (req, res, next) => {
   } catch (e) { next(e) }
 })
 
-router.get('/:id', checkAccountId, async (req, res, next) => {
-  try {
-    const account = await Accounts.getById(req.params.id);
-    res.json(account);
-  } catch (e) { next(e) }
+router.get('/:id', checkAccountId, (req, res) => {
+  res.json(req.account);
 })
 
 router.post(
   '/', 
   checkAccountPayload, 
   checkAccountNameUnique, 
-  (req, res, next) => {
+  async (req, res, next) => {
   try {
-
+    const newAccount = await Accounts.create(req.body);
+    res.status(201).json(newAccount);
   } catch (e) {
     next(e)
   }
@@ -33,7 +31,7 @@ router.put(
   checkAccountId,
   checkAccountPayload,
   checkAccountNameUnique,
-  (req, res, next) => {
+  async (req, res, next) => {
   try {
 
   } catch (e) {
@@ -41,9 +39,13 @@ router.put(
   }
 });
 
-router.delete('/:id', checkAccountId, (req, res, next) => {
+router.delete(
+  '/:id', 
+  checkAccountId, 
+  async (req, res, next) => {
   try {
-
+    await Accounts.deleteById(req.params.id);
+    res.json(req.account);
   } catch (e) {
     next(e)
   }
